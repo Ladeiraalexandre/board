@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset junior:202408191938
+--changeset ladeira:202508031045
 --comment: blocks table create
 
 CREATE TABLE BLOCKS(
@@ -12,4 +12,4 @@ CREATE TABLE BLOCKS(
     CONSTRAINT cards__blocks_fk FOREIGN KEY (card_id) REFERENCES CARDS(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
---rollback DROP TABLE BLOCKS
+--rollback

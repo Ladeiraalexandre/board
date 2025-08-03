@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset junior:202408191938
+--changeset ladeira:202508031045
 --comment: boards_columns table create
 
 CREATE TABLE BOARDS_COLUMNS(
@@ -12,4 +12,4 @@ CREATE TABLE BOARDS_COLUMNS(
     CONSTRAINT id_order_uk UNIQUE KEY unique_board_id_order (board_id, `order`)
 ) ENGINE=InnoDB;
 
---rollback DROP TABLE BOARDS_COLUMNS
+--rollback

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 @AllArgsConstructor
 public class BoardService {
@@ -16,26 +17,30 @@ public class BoardService {
     public BoardEntity insert(final BoardEntity entity) throws SQLException {
         var dao = new BoardDAO(connection);
         var boardColumnDAO = new BoardColumnDAO(connection);
-        try{
+
+        try {
             dao.insert(entity);
-            var columns = entity.getBoardColumns().stream().map(c -> {
-                c.setBoard(entity);
-                return c;
-            }).toList();
-            for (var column :  columns){
-                boardColumnDAO.insert(column);
-            }
+            insertBoardColumns(entity, boardColumnDAO);
             connection.commit();
+            return entity;
         } catch (SQLException e) {
             connection.rollback();
             throw e;
         }
-        return entity;
+    }
+
+    private void insertBoardColumns(BoardEntity entity, BoardColumnDAO boardColumnDAO) throws SQLException {
+        List<?> columns = entity.getBoardColumns();
+        for (var column : columns) {
+            column.setBoard(entity);
+            boardColumnDAO.insert(column);
+        }
     }
 
     public boolean delete(final Long id) throws SQLException {
         var dao = new BoardDAO(connection);
-        try{
+
+        try {
             if (!dao.exists(id)) {
                 return false;
             }
@@ -47,5 +52,4 @@ public class BoardService {
             throw e;
         }
     }
-
 }

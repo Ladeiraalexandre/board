@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset junior:202408191938
+--changeset ladeira:202508031045
 --comment: cards table create
 
 CREATE TABLE CARDS(
@@ -10,4 +10,4 @@ CREATE TABLE CARDS(
     CONSTRAINT boards_columns__cards_fk FOREIGN KEY (board_column_id) REFERENCES BOARDS_COLUMNS(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
---rollback DROP TABLE CARDS
+--rollback DROP TABLE

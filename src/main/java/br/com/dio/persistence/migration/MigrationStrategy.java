@@ -19,31 +19,32 @@ public class MigrationStrategy {
 
     private final Connection connection;
 
-    public void executeMigration(){
-        var originalOut = System.out;
-        var originalErr = System.err;
-        try(var fos = new FileOutputStream("liquibase.log")){
-            System.setOut(new PrintStream(fos));
-            System.setErr(new PrintStream(fos));
-            try(
-                    var connection = getConnection();
-                    var jdbcConnection = new JdbcConnection(connection);
-            ){
-                var liquibase = new Liquibase(
+    public void executeMigration() {
+        PrintStream originalOut = System.out;
+        PrintStream originalErr = System.err;
+
+        try (FileOutputStream fos = new FileOutputStream("liquibase.log");
+             PrintStream logStream = new PrintStream(fos)) {
+
+            System.setOut(logStream);
+            System.setErr(logStream);
+
+            try (Connection conn = getConnection();
+                 JdbcConnection jdbcConnection = new JdbcConnection(conn)) {
+
+                Liquibase liquibase = new Liquibase(
                         "/db/changelog/db.changelog-master.yml",
                         new ClassLoaderResourceAccessor(),
                         jdbcConnection);
                 liquibase.update();
             } catch (SQLException | LiquibaseException e) {
-                e.printStackTrace();
-                System.setErr(originalErr);
+                e.printStackTrace(logStream);
             }
-        } catch (IOException ex){
-            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace(originalErr);
         } finally {
             System.setOut(originalOut);
             System.setErr(originalErr);
         }
     }
-
 }
